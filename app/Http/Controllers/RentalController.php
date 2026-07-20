@@ -3,69 +3,50 @@
 namespace App\Http\Controllers;
 
 use App\Models\Rental;
-use App\Models\Equipment;
+use App\Models\Property;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 class RentalController extends Controller
 {
-    public function myRentals()
+    public function index()
     {
-        $rentals = auth()->user()->rentals()->latest()->get();
-        return view('rentals.my', compact('rentals'));
-    }
-
-    public function create()
-    {
-        $equipment = Equipment::where('status', 'available')->get();
-        return view('rentals.create', compact('equipment'));
+        $rentals = Rental::where('client_id', Auth::id())->latest()->get();
+        return view('rentals.index', compact('rentals'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'start_date' => 'required|date|after_or_equal:today',
+        $validated = $request->validate([
+            'property_id' => 'required|exists:properties,id',
+            'start_date' => 'required|date|after:today',
             'end_date' => 'required|date|after:start_date',
-            'items' => 'required|array|min:1',
         ]);
 
-        DB::transaction(function () use ($request) {
-            $days = Carbon::parse($request->end_date)->diffInDays(Carbon::parse($request->start_date));
-            $total = 0;
+        // Lógica de negocio central: verificar disponibilidad
+        $overlap = Rental::where('property_id', $validated['property_id'])
+            ->where('status', '!=', 'cancelled')
+            ->where(function($q) use ($validated) {
+                $q->whereBetween('start_date', [$validated['start_date'], $validated['end_date']])
+                  ->orWhereBetween('end_date', [$validated['start_date'], $validated['end_date']]);
+            })->exists();
 
-            $rental = Rental::create([
-                'client_id' => auth()->id(),
-                'start_date' => $request->start_date,
-                'end_date' => $request->end_date,
-                'status' => 'pending',
-                'total_price' => 0,
-            ]);
+        if ($overlap) {
+            return back()->withErrors(['dates' => 'Fechas no disponibles.']);
+        }
 
-            foreach ($request->items as $itemId) {
-                $equip = Equipment::findOrFail($itemId);
-                
-                if ($equip->status !== 'available') {
-                    throw new \Exception('Equipo no disponible: ' . $equip->name);
-                }
+        $property = Property::findOrFail($validated['property_id']);
+        $days = Carbon::parse($validated['end_date'])->diffInDays(Carbon::parse($validated['start_date']));
 
-                $subtotal = $equip->daily_price * $days;
+        $validated['client_id'] = Auth::id();
+        $validated['status'] = 'pending';
+        $validated['total_price'] = $property->price_per_night * $days;
 
-                RentalItem::create([
-                    'rental_id' => $rental->id,
-                    'equipment_id' => $equip->id,
-                    'daily_price' => $equip->daily_price,
-                    'days' => $days,
-                    'subtotal' => $subtotal,
-                ]);
+        Rental::create($validated);
 
-                $total += $subtotal;
-                $equip->update(['status' => 'rented']);
-            }
-
-            $rental->update(['total_price' => $total]);
-        });
-
-        return redirect()->route('rentals.my')->with('success', 'Solicitud de alquiler creada');
+        return redirect()->route('rentals.index')->with('success', 'Reserva creada exitosamente');
     }
+
+    // Agrega más métodos según necesites
 }
