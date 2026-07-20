@@ -1,32 +1,29 @@
 # AlquilaFacil
 
-**Estudiante:Santiago Jose Morales  
-**URL del Proyecto en Railway:** https://alquilafacil.up.railway.app  
-**Usuario Admin:** admin@example.com  
-**Contraseña:** password123  
+**Estudiante:** Santiago Jose Morales
 
-## Descripción
-Sistema de gestión de alquileres vacacionales donde los usuarios pueden publicar propiedades, los huéspedes pueden reservar y los administradores gestionan el estado de todo el sistema.
+**URL Railway:** https://alquilafacil.up.railway.app (actualizar después de deploy)
+**Admin:** admin@alquilafacil.com / password123
 
-## Tablas implementadas y sus relaciones
-- **Users**: Almacena propietarios, huéspedes y admins (campo `is_admin`).
-- **Properties**: Pertenece a un `User` (dueño). Tiene muchas `Rentals`.
-- **Rentals**: Pertenece a un `User` (inquilino) y a una `Property`. Tiene un `Payment`.
-- **Payments**: Pertenece a un `Rental`.
+## Descripción breve
+Sistema completo de alquiler vacacional con publicación de propiedades, reservas y panel admin.
 
-## Instrucciones para correr localmente
-1. Clonar el repositorio: `git clone https://github.com/tu-usuario/alquilafacil.git`
-2. Ejecutar `composer install`
-3. Copiar `.env.example` a `.env` y configurar la base de datos (usa SQLite para desarrollo).
-4. Generar clave: `php artisan key:generate`
-5. Ejecutar migraciones: `php artisan migrate`
-6. (Opcional) Ejecutar seeders: `php artisan db:seed`
-7. Iniciar servidor: `php artisan serve`
+## Tablas y relaciones
+- **Users** (role: admin/owner/guest) 
+- **Properties** belongsTo User, hasMany Rentals
+- **Rentals** belongsTo Property + User
+- **Payments** belongsTo Rental
 
-## Capturas de pantalla
-![Home](screenshots/home.png)
-![Admin](screenshots/admin.png)promptly addressed.
+## Instrucciones locales
+1. git clone https://github.com/Sarfs-crypto/alquilafacil.git
+2. composer install && npm install && npm run build
+3. cp .env.example .env
+4. php artisan key:generate
+5. php artisan migrate --seed
+6. php artisan serve
 
-## License
+## Capturas
+(Agrega imágenes)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Testing
+Mínimo 4 tests implementados en tests/Feature/
