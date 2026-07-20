@@ -1,29 +1,30 @@
-# AlquilaFacil
+# AlquilaFacil - Alquiler de Equipos
 
 **Estudiante:** Santiago Jose Morales
 
 **URL Railway:** https://alquilafacil.up.railway.app
-**Admin:** admin@alquilafacil.com / password123
+**Admin:** admin@example.com / password123
 
 ## Descripción breve
-Sistema de alquiler vacacional completo.
+Sistema de gestión de alquiler de equipos (computadores, cámaras, herramientas, etc.). Usuarios cliente solicitan alquileres y admin aprueba/devuelve.
 
-## Tablas y relaciones
-- Users (role)
-- Properties → User
-- Rentals → Property + User
-- Payments → Rental
+## Tablas implementadas y relaciones
+- **Users** (role: admin/client)
+- **Categories** 
+- **Equipment** belongsTo Category, status (available/rented/maintenance)
+- **Rentals**
+- **RentalItems** 
 
-## Instrucciones locales
-1. git clone ...
-2. composer install && npm ci
+## Instrucciones para correr localmente
+1. git clone https://github.com/Sarfs-crypto/alquilafacil.git
+2. composer install && npm install && npm run build
 3. cp .env.example .env && php artisan key:generate
 4. php artisan migrate --seed
 5. php artisan serve
 
 ## Capturas de pantalla
-![Dashboard](screenshots/dashboard.png)
-![Property](screenshots/property.png)
+![Catálogo](screenshots/catalogo.png)
+![Admin](screenshots/admin.png)
 
 ## Tests
-4+ tests implementados.
+Mínimo 4 tests en tests/Feature/
