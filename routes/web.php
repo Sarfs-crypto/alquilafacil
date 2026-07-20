@@ -7,15 +7,18 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-// Properties
-Route::resource('properties', App\Http\Controllers\PropertyController::class)->middleware('auth');
-
-// Rentals
+// Cliente
+Route::get('/catalogo', [App\Http\Controllers\EquipmentController::class, 'index'])->name('catalogo');
+Route::get('/equipo/{id}', [App\Http\Controllers\EquipmentController::class, 'show'])->name('equipo.show');
 Route::resource('rentals', App\Http\Controllers\RentalController::class)->middleware('auth');
+
+// Admin
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::resource('equipos', App\Http\Controllers\EquipmentController::class);
+    Route::resource('categorias', App\Http\Controllers\CategoryController::class);
+    Route::get('/solicitudes', [App\Http\Controllers\RentalController::class, 'adminIndex'])->name('admin.rentals');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
