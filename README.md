@@ -2,28 +2,28 @@
 
 **Estudiante:** Santiago Jose Morales
 
-**URL Railway:** https://alquilafacil.up.railway.app (actualizar después de deploy)
+**URL Railway:** https://alquilafacil.up.railway.app
 **Admin:** admin@alquilafacil.com / password123
 
 ## Descripción breve
-Sistema completo de alquiler vacacional con publicación de propiedades, reservas y panel admin.
+Sistema de alquiler vacacional completo.
 
 ## Tablas y relaciones
-- **Users** (role: admin/owner/guest) 
-- **Properties** belongsTo User, hasMany Rentals
-- **Rentals** belongsTo Property + User
-- **Payments** belongsTo Rental
+- Users (role)
+- Properties → User
+- Rentals → Property + User
+- Payments → Rental
 
 ## Instrucciones locales
-1. git clone https://github.com/Sarfs-crypto/alquilafacil.git
-2. composer install && npm install && npm run build
-3. cp .env.example .env
-4. php artisan key:generate
-5. php artisan migrate --seed
-6. php artisan serve
+1. git clone ...
+2. composer install && npm ci
+3. cp .env.example .env && php artisan key:generate
+4. php artisan migrate --seed
+5. php artisan serve
 
-## Capturas
-(Agrega imágenes)
+## Capturas de pantalla
+![Dashboard](screenshots/dashboard.png)
+![Property](screenshots/property.png)
 
-## Testing
-Mínimo 4 tests implementados en tests/Feature/
+## Tests
+4+ tests implementados.
