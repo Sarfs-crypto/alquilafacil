@@ -1,6 +1,6 @@
 # AlquilaFacil
 
-**Estudiante:** [Tu Nombre Completo]  
+**Estudiante:Santiago Jose Morales  
 **URL del Proyecto en Railway:** https://alquilafacil.up.railway.app  
 **Usuario Admin:** admin@example.com  
 **Contraseña:** password123  
