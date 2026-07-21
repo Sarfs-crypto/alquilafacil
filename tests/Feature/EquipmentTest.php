@@ -12,14 +12,15 @@ class EquipmentTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_admin_can_create_equipment()
+    /** @test */
+    public function admin_can_create_equipment()
     {
         $admin = User::factory()->create(['role' => 'admin']);
         $category = Category::factory()->create();
 
         $response = $this->actingAs($admin)->post('/admin/equipos', [
             'category_id' => $category->id,
-            'name' => 'Laptop Dell',
+            'name' => 'Laptop Dell XPS',
             'code' => 'LAP-001',
             'daily_price' => 50.00,
         ]);
@@ -28,7 +29,8 @@ class EquipmentTest extends TestCase
         $this->assertDatabaseHas('equipment', ['code' => 'LAP-001']);
     }
 
-    public function test_equipment_can_be_rented_only_if_available()
+    /** @test */
+    public function equipment_can_be_rented_only_if_available()
     {
         $equipment = Equipment::factory()->create(['status' => 'available']);
         $this->assertEquals('available', $equipment->status);
@@ -37,14 +39,16 @@ class EquipmentTest extends TestCase
         $this->assertEquals('rented', $equipment->status);
     }
 
-    public function test_client_can_view_catalog()
+    /** @test */
+    public function client_can_view_catalog()
     {
         $client = User::factory()->create(['role' => 'client']);
         $response = $this->actingAs($client)->get('/catalogo');
         $response->assertStatus(200);
     }
 
-    public function test_equipment_can_be_set_to_maintenance_by_admin()
+    /** @test */
+    public function admin_can_set_equipment_to_maintenance()
     {
         $admin = User::factory()->create(['role' => 'admin']);
         $equipment = Equipment::factory()->create(['status' => 'available']);

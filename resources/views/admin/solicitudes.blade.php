@@ -5,6 +5,13 @@
 @section('content')
 <h1><i class="fas fa-file-invoice"></i> Solicitudes de Alquiler</h1>
 
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+@endif
+
 @if($rentals->isEmpty())
     <div class="alert alert-info">No hay solicitudes registradas.</div>
 @else
@@ -45,7 +52,7 @@
                                 <form action="{{ route('rental.approve', $rental->id) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('PATCH')
-                                    <button type="submit" class="btn btn-success btn-sm">
+                                    <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('¿Aprobar este alquiler?')">
                                         <i class="fas fa-check"></i> Aprobar
                                     </button>
                                 </form>
@@ -53,7 +60,7 @@
                                 <form action="{{ route('rental.return', $rental->id) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('PATCH')
-                                    <button type="submit" class="btn btn-primary btn-sm">
+                                    <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('¿Registrar devolución?')">
                                         <i class="fas fa-undo"></i> Devolver
                                     </button>
                                 </form>

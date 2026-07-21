@@ -12,7 +12,8 @@ class RentalTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_client_can_create_rental_request()
+    /** @test */
+    public function client_can_create_rental_request()
     {
         $client = User::factory()->create(['role' => 'client']);
         $equipment = Equipment::factory()->create(['status' => 'available']);
@@ -27,7 +28,8 @@ class RentalTest extends TestCase
         $this->assertDatabaseHas('rentals', ['client_id' => $client->id]);
     }
 
-    public function test_client_can_cancel_pending_rental()
+    /** @test */
+    public function client_can_cancel_pending_rental()
     {
         $client = User::factory()->create(['role' => 'client']);
         $rental = Rental::factory()->create([
@@ -40,7 +42,8 @@ class RentalTest extends TestCase
         $this->assertDatabaseHas('rentals', ['id' => $rental->id, 'status' => 'cancelled']);
     }
 
-    public function test_admin_can_approve_rental()
+    /** @test */
+    public function admin_can_approve_rental()
     {
         $admin = User::factory()->create(['role' => 'admin']);
         $rental = Rental::factory()->create(['status' => 'pending']);
@@ -50,7 +53,8 @@ class RentalTest extends TestCase
         $this->assertDatabaseHas('rentals', ['id' => $rental->id, 'status' => 'active']);
     }
 
-    public function test_admin_can_return_rental()
+    /** @test */
+    public function admin_can_return_rental()
     {
         $admin = User::factory()->create(['role' => 'admin']);
         $rental = Rental::factory()->create(['status' => 'active']);
